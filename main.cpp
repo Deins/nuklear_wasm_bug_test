@@ -66,7 +66,7 @@ void Init()
     image = nk_font_atlas_bake(&font_atlas, &w, &h, NK_FONT_ATLAS_RGBA32);
     unsigned tex = 1; //CreateAndUploadTexture(UploadTexture(tex, (RGBA*)image, Vec2i(w, h), false)
     nk_font_atlas_end(&font_atlas, nk_handle_id((int)tex), &gNkDevice.null_texture);
-
+    
     nk_style_set_font(&ctx, &font_atlas.default_font->handle); // default font		
 }
 
@@ -115,7 +115,6 @@ void Render()
             offset += cmd->elem_count;
         }
     }
-
 	// Cleanup & finishing steps
     nk_clear(&ctx);
 }
@@ -130,15 +129,10 @@ int main()
         nk_input_end(&ctx);
 
         // GUI
-		enum { EASY, HARD };
-		static int op = EASY;
-		static float value = 0.6f;
-		static int i = 20;
-
 		if (nk_begin(&ctx, "Test", nk_rect(350, 0, 220, 220), NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_CLOSABLE))
 		{
 			nk_layout_row_static(&ctx, 30, 80, 1);
-			nk_label(&ctx, "Hello World!", NK_TEXT_ALIGN_LEFT);
+			nk_label(&ctx, "Hello World!", NK_TEXT_ALIGN_LEFT); // this works
 			nk_label_colored(&ctx, "Hello Color!", NK_TEXT_ALIGN_LEFT, nk_color{ 255,222,0,255 }); // this crashes in wasm
 		}
 		nk_end(&ctx);
