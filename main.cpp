@@ -66,7 +66,7 @@ void Init()
     image = nk_font_atlas_bake(&font_atlas, &w, &h, NK_FONT_ATLAS_RGBA32);
     unsigned tex = 1; //CreateAndUploadTexture(UploadTexture(tex, (RGBA*)image, Vec2i(w, h), false)
     nk_font_atlas_end(&font_atlas, nk_handle_id((int)tex), &gNkDevice.null_texture);
-    
+
     nk_style_set_font(&ctx, &font_atlas.default_font->handle); // default font		
 }
 
@@ -98,8 +98,6 @@ void Render()
         nk_buffer vbuf, ebuf;
         nk_buffer_init_fixed(&vbuf, gNkDevice.verts, sizeof(gNkDevice.verts));
         nk_buffer_init_fixed(&ebuf, gNkDevice.indices, sizeof(gNkDevice.indices));
-        bool ok = nk__begin(&ctx);
-        assert(ok);
         auto convert_result = nk_convert(&ctx, &gNkDevice.cmds, &vbuf, &ebuf, &config);
         assert(convert_result == NK_CONVERT_SUCCESS);
     }
