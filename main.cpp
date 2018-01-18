@@ -74,45 +74,31 @@ void Render()
 {
     cout << "Render!" << endl;
     // Just generate vertex & indice buffers from nuklear, without actual gpu rendering
-    {
-        // convert from command queue into draw list
-        nk_convert_config config;
-        constexpr nk_draw_vertex_layout_element vertex_layout[] = {
-            { NK_VERTEX_POSITION, NK_FORMAT_FLOAT, offsetof(NkDevice::Vert, pos) },
-            { NK_VERTEX_TEXCOORD, NK_FORMAT_FLOAT, offsetof(NkDevice::Vert, uv) },
-            { NK_VERTEX_COLOR, NK_FORMAT_R8G8B8A8, offsetof(NkDevice::Vert, col) },
-            { NK_VERTEX_LAYOUT_END }
-        };
-        memset(&config, 0, sizeof(config));
-        config.vertex_layout = vertex_layout;
-        config.vertex_size = sizeof(NkDevice::Vert);
-        config.vertex_alignment = alignof(NkDevice::Vert);
-        config.null = gNkDevice.null_texture;
-        config.circle_segment_count = 22;
-        config.curve_segment_count = 22;
-        config.arc_segment_count = 22;
-        config.global_alpha = 1.0f;
-        config.shape_AA = nk_anti_aliasing::NK_ANTI_ALIASING_OFF;
-        config.line_AA = nk_anti_aliasing::NK_ANTI_ALIASING_OFF;
+    nk_convert_config config;
+    constexpr nk_draw_vertex_layout_element vertex_layout[] = {
+        { NK_VERTEX_POSITION, NK_FORMAT_FLOAT, offsetof(NkDevice::Vert, pos) },
+        { NK_VERTEX_TEXCOORD, NK_FORMAT_FLOAT, offsetof(NkDevice::Vert, uv) },
+        { NK_VERTEX_COLOR, NK_FORMAT_R8G8B8A8, offsetof(NkDevice::Vert, col) },
+        { NK_VERTEX_LAYOUT_END }
+    };
+    memset(&config, 0, sizeof(config));
+    config.vertex_layout = vertex_layout;
+    config.vertex_size = sizeof(NkDevice::Vert);
+    config.vertex_alignment = alignof(NkDevice::Vert);
+    config.null = gNkDevice.null_texture;
+    config.circle_segment_count = 22;
+    config.curve_segment_count = 22;
+    config.arc_segment_count = 22;
+    config.global_alpha = 1.0f;
+    config.shape_AA = nk_anti_aliasing::NK_ANTI_ALIASING_OFF;
+    config.line_AA = nk_anti_aliasing::NK_ANTI_ALIASING_OFF;
 
-        nk_buffer vbuf, ebuf;
-        nk_buffer_init_fixed(&vbuf, gNkDevice.verts, sizeof(gNkDevice.verts));
-        nk_buffer_init_fixed(&ebuf, gNkDevice.indices, sizeof(gNkDevice.indices));
-        auto convert_result = nk_convert(&ctx, &gNkDevice.cmds, &vbuf, &ebuf, &config);
-        assert(convert_result == NK_CONVERT_SUCCESS);
-    }
-
-    {	// Draw
-        const struct nk_draw_command *cmd;
-        const nk_draw_index *offset = NULL;
-        nk_draw_foreach(cmd, &ctx, &gNkDevice.cmds)
-        {
-            if (!cmd->elem_count)
-                continue;
-            // rendering should happen here
-            offset += cmd->elem_count;
-        }
-    }
+    nk_buffer vbuf, ebuf;
+    nk_buffer_init_fixed(&vbuf, gNkDevice.verts, sizeof(gNkDevice.verts));
+    nk_buffer_init_fixed(&ebuf, gNkDevice.indices, sizeof(gNkDevice.indices));
+    auto convert_result = nk_convert(&ctx, &gNkDevice.cmds, &vbuf, &ebuf, &config);
+    assert(convert_result == NK_CONVERT_SUCCESS);
+    
 	// Cleanup & finishing steps
     nk_clear(&ctx);
 }
@@ -120,8 +106,6 @@ void Render()
 int main()
 {
     Init();
-
-    //while (true)
     {   // New frame
         nk_input_begin(&ctx);
         nk_input_end(&ctx);
